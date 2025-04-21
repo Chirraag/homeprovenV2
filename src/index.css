@@ -1,0 +1,159 @@
+@font-face {
+  font-family: 'Taurusgroteskroman Vf';
+  src: url('https://db.onlinewebfonts.com/t/7def4c5e9c8f3704acd83d9131e0f9f0.eot');
+  src: url('https://db.onlinewebfonts.com/t/7def4c5e9c8f3704acd83d9131e0f9f0.eot?#iefix') format('embedded-opentype'),
+    url('https://db.onlinewebfonts.com/t/7def4c5e9c8f3704acd83d9131e0f9f0.woff2') format('woff2'),
+    url('https://db.onlinewebfonts.com/t/7def4c5e9c8f3704acd83d9131e0f9f0.woff') format('woff'),
+    url('https://db.onlinewebfonts.com/t/7def4c5e9c8f3704acd83d9131e0f9f0.ttf') format('truetype');
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Taurusgroteskroman Vf', 'Apple UI', 'Lato', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: #faf9f6;
+    color: #000000;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Taurusgroteskroman Vf', 'Apple UI', 'Outfit', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Custom Selection */
+  ::selection {
+    background-color: #c96342;
+    color: white;
+  }
+
+  /* Smoother Transitions */
+  * {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Utility Classes */
+.bg-pattern-dots {
+  background-image: radial-gradient(circle at 1px 1px, rgb(0 0 0 / 0.03) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+.bg-gradient-brand {
+  background: linear-gradient(90deg, #ff5900, #c96342, #5f007d);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(90deg, #ff5900, #c96342, #5f007d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animations */
+@keyframes wave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.8); }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-wave {
+  animation: wave 2s infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 5s ease infinite;
+}
+
+/* Stagger animations */
+.stagger-children > * {
+  opacity: 0;
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #c96342 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #c96342;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #b84a2e;
+}
+
+/* Better button interactions */
+.btn-hover-lift {
+  @apply transition-all duration-300;
+}
+
+.btn-hover-lift:hover {
+  @apply transform -translate-y-1 shadow-lg;
+}
+
+/* Glass effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Text balance for headings */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/* Prevent text overflow */
+p, li {
+  text-wrap: pretty;
+}
+
+/* Focus states */
+:focus-visible {
+  outline: 2px solid #c96342;
+  outline-offset: 2px;
+}
+
+/* Hover transitions */
+a, button {
+  transition: all 0.2s ease;
+}
+
+/* Better logo for dark backgrounds */
+.logo-dark-bg {
+  filter: brightness(1.2) contrast(1.1);
+}
+
+/* Smooth loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
