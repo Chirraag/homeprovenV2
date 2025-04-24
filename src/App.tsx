@@ -1,13 +1,13 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import LandingPage from './pages/LandingPage';
-import StartTodayPage from './pages/StartTodayPage';
-import TermsConditionsPage from './pages/TermsConditionsPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import theme from './theme';
-import './index.css';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import LandingPage from "./pages/LandingPage";
+import StartTodayPage from "./pages/StartTodayPage";
+import TermsConditionsPage from "./pages/TermsConditionsPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import theme from "./theme";
+import "./index.css";
 
 const App: React.FC = () => {
   return (

@@ -1,33 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { 
-  AppBar, 
-  Toolbar, 
-  Box, 
-  Button, 
-  IconButton, 
-  Drawer, 
-  List, 
-  ListItem, 
+import React, { useState, useEffect } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
   ListItemText,
   useMediaQuery,
   useTheme,
   Container,
   Badge,
   Chip,
-  Typography
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import HomeIcon from '@mui/icons-material/Home';
-import { motion, AnimatePresence } from 'framer-motion';
-import { NavLink } from '../types';
+  Typography,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import HomeIcon from "@mui/icons-material/Home";
+import { motion, AnimatePresence } from "framer-motion";
+import { NavLink } from "../types";
 
-const navLinks: NavLink[] = [
-  { label: 'Features', href: '#features' },
-  { label: 'Solutions', href: '#solutions' },
-  { label: 'Testimonials', href: '#testimonials' },
-  { label: 'Pricing', href: '#pricing' }
+// Define raw nav links that need processing based on current route
+const rawNavLinks = [
+  { label: "Features", anchor: "features" },
+  { label: "Solutions", anchor: "solutions" },
+  { label: "Testimonials", anchor: "testimonials" },
+  { label: "Pricing", anchor: "pricing" },
 ];
 
 // Make sure we export the Header component as default
@@ -36,14 +37,23 @@ const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showHighlight, setShowHighlight] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const location = useLocation();
+
+  // Process navigation links based on current path
+  const navLinks = rawNavLinks.map((link) => {
+    const isHomePage = location.pathname === "/";
+    const href = isHomePage ? `#${link.anchor}` : `/#${link.anchor}`;
+    return { label: link.label, href: href };
+  });
 
   // Show the highlight notification after a delay
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowHighlight(true);
     }, 2000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -52,8 +62,8 @@ const Header = () => {
       setScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleDrawerToggle = () => {
@@ -62,64 +72,74 @@ const Header = () => {
 
   const drawer = (
     <Box
-      sx={{ width: 280, height: '100%', backgroundColor: theme.palette.background.paper }}
+      sx={{
+        width: { xs: "100%", sm: 280 },
+        height: "100%",
+        backgroundColor: theme.palette.background.paper,
+      }}
       role="presentation"
       onClick={handleDrawerToggle}
     >
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'center',
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
           p: 2,
-          borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+          borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
         }}
       >
         <Box
           component="img"
           src="https://homeproven.com/wp-content/uploads/2023/03/home_proven_logo_trans.png"
           alt="Home Proven Logo"
-          sx={{ height: '40px' }}
+          sx={{
+            height: { xs: "32px", sm: "40px" },
+            maxWidth: "80%",
+          }}
         />
-        <IconButton onClick={handleDrawerToggle}>
+        <IconButton onClick={handleDrawerToggle} aria-label="Close menu">
           <CloseIcon />
         </IconButton>
       </Box>
       <List sx={{ pt: 4 }}>
         {navLinks.map((link) => (
-          <ListItem 
-            button 
-            component="a" 
-            href={link.href} 
+          <ListItem
+            button
+            component="a"
+            href={link.href}
             key={link.label}
-            sx={{ 
-              py: 2,
+            sx={{
+              py: { xs: 1.5, sm: 2 },
               px: 3,
-              '&:hover': { 
-                backgroundColor: 'rgba(201, 99, 66, 0.1)' 
-              }
+              "&:hover": {
+                backgroundColor: "rgba(201, 99, 66, 0.1)",
+              },
             }}
           >
-            <ListItemText 
-              primary={link.label} 
-              sx={{ 
-                '& .MuiTypography-root': {
+            <ListItemText
+              primary={link.label}
+              sx={{
+                "& .MuiTypography-root": {
                   fontWeight: 600,
-                  fontSize: '1.1rem'
-                }
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
+                },
               }}
             />
           </ListItem>
         ))}
         <ListItem sx={{ px: 3, mt: 2 }}>
-          <Button 
-            component={RouterLink} 
+          <Button
+            component={RouterLink}
             to="/start-today"
-            variant="contained" 
+            variant="contained"
             color="primary"
             fullWidth
-            size="large"
-            sx={{ py: 1.5 }}
+            size={isSmallMobile ? "medium" : "large"}
+            sx={{
+              py: { xs: 1, sm: 1.5 },
+              fontSize: { xs: "0.9rem", sm: "0.95rem" },
+            }}
           >
             Start Today
           </Button>
@@ -135,50 +155,52 @@ const Header = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-
+      {/* This is intentionally left empty as in the original */}
     </motion.div>
   );
 
   return (
-    <AppBar 
-      position="fixed" 
+    <AppBar
+      position="fixed"
       elevation={0}
       sx={{
-        backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
-        boxShadow: scrolled ? '0 4px 30px rgba(0, 0, 0, 0.1)' : 'none',
-        backdropFilter: scrolled ? 'blur(20px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        backgroundColor: scrolled ? "rgba(255, 255, 255, 0.9)" : "transparent",
+        boxShadow: scrolled ? "0 4px 30px rgba(0, 0, 0, 0.1)" : "none",
+        backdropFilter: scrolled ? "blur(20px)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
       }}
     >
       <Container maxWidth="lg">
-        <Toolbar 
-          sx={{ 
-            justifyContent: 'space-between', 
-            py: 1,
-            px: { xs: 0, sm: 2 }
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+            py: { xs: 0.5, md: 1 },
+            px: { xs: 0, sm: 2 },
+            minHeight: { xs: "64px", sm: "72px", md: "80px" },
           }}
         >
           <Box
             component="a"
             href="/"
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              position: 'relative',
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+              position: "relative",
             }}
           >
             <Box
               component="img"
               src="https://homeproven.com/wp-content/uploads/2023/03/home_proven_logo_trans.png"
               alt="Home Proven Logo"
-              sx={{ 
-                height: '40px',
-                transition: 'all 0.3s ease'
+              sx={{
+                height: { xs: "32px", sm: "36px", md: "40px" },
+                maxWidth: "100%",
+                transition: "all 0.3s ease",
               }}
             />
-            
+
             {/* Animated notification indicator beside the logo */}
             <AnimatePresence>
               {showHighlight && (
@@ -186,13 +208,13 @@ const Header = () => {
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 300, 
-                    damping: 15 
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 15,
                   }}
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: -5,
                     right: -10,
                   }}
@@ -204,11 +226,11 @@ const Header = () => {
                       <HomeIcon fontSize="small" sx={{ fontSize: 10 }} />
                     }
                     sx={{
-                      '& .MuiBadge-badge': {
-                        backgroundColor: '#c96342',
-                        padding: '6px',
-                        border: '2px solid white',
-                      }
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "#c96342",
+                        padding: "6px",
+                        border: "2px solid white",
+                      },
                     }}
                   />
                 </motion.div>
@@ -217,79 +239,82 @@ const Header = () => {
           </Box>
 
           {isMobile ? (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               {/* Status pill for mobile */}
               {scrolled && <StatusIndicator />}
-              
+
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ 
+                sx={{
                   color: theme.palette.text.primary,
-                  transition: 'color 0.3s ease'
+                  transition: "color 0.3s ease",
                 }}
               >
                 <MenuIcon />
               </IconButton>
             </Box>
           ) : (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               {/* Status indicator for desktop */}
               {scrolled && <StatusIndicator />}
-              
-              <Box sx={{ display: 'flex', mr: 4 }}>
+
+              <Box sx={{ display: "flex", mr: 4 }}>
                 {navLinks.map((link, index) => {
                   // We'll add a special effect to the first nav item
                   const isFirstLink = index === 0;
-                  
+
                   return (
                     <Box
                       component="a"
                       href={link.href}
                       key={link.label}
                       sx={{
-                        mx: 2,
+                        mx: { md: 1.5, lg: 2 },
                         color: theme.palette.text.primary,
                         fontWeight: 600,
-                        textDecoration: 'none',
-                        position: 'relative',
-                        transition: 'color 0.3s ease',
-                        '&:hover': {
+                        textDecoration: "none",
+                        position: "relative",
+                        transition: "color 0.3s ease",
+                        "&:hover": {
                           color: theme.palette.primary.main,
                         },
-                        '&::after': {
+                        "&::after": {
                           content: '""',
-                          position: 'absolute',
+                          position: "absolute",
                           bottom: -4,
                           left: 0,
-                          width: '0%',
-                          height: '2px',
+                          width: "0%",
+                          height: "2px",
                           backgroundColor: theme.palette.primary.main,
-                          transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                          transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         },
-                        '&:hover::after': {
-                          width: '100%',
+                        "&:hover::after": {
+                          width: "100%",
                         },
+                        fontSize: { md: "0.9rem", lg: "1rem" },
                       }}
                     >
                       {isFirstLink ? (
-                        <Box sx={{ position: 'relative', display: 'inline-block' }}>
+                        <Box
+                          sx={{ position: "relative", display: "inline-block" }}
+                        >
                           {link.label}
                           {showHighlight && (
                             <Chip
                               size="small"
                               label="New"
                               sx={{
-                                position: 'absolute',
+                                position: "absolute",
                                 top: -14,
                                 right: -30,
-                                height: '20px',
-                                fontSize: '0.65rem',
+                                height: "20px",
+                                fontSize: "0.65rem",
                                 backgroundColor: theme.palette.primary.main,
-                                color: 'white',
-                                fontWeight: 'bold',
+                                color: "white",
+                                fontWeight: "bold",
                               }}
                             />
                           )}
@@ -301,42 +326,45 @@ const Header = () => {
                   );
                 })}
               </Box>
-              
+
               {/* Modified "Start Today" button with floating notification */}
-              <Box sx={{ position: 'relative' }}>
-                <Button 
-                  component={RouterLink} 
+              <Box sx={{ position: "relative" }}>
+                <Button
+                  component={RouterLink}
                   to="/start-today"
-                  variant="contained" 
+                  variant="contained"
                   color="primary"
                   sx={{
-                    px: 3,
-                    py: 1.2,
-                    fontSize: '0.95rem',
-                    boxShadow: scrolled ? '0 4px 12px rgba(201, 99, 66, 0.2)' : 'none',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    '&::after': {
+                    px: { md: 2, lg: 3 },
+                    py: { md: 1, lg: 1.2 },
+                    fontSize: { md: "0.85rem", lg: "0.95rem" },
+                    boxShadow: scrolled
+                      ? "0 4px 12px rgba(201, 99, 66, 0.2)"
+                      : "none",
+                    position: "relative",
+                    overflow: "hidden",
+                    "&::after": {
                       content: '""',
-                      position: 'absolute',
+                      position: "absolute",
                       top: 0,
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      background: 'linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'shimmer 2s infinite',
-                      transformOrigin: '0 0',
+                      background:
+                        "linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%)",
+                      backgroundSize: "200% 200%",
+                      animation: "shimmer 2s infinite",
+                      transformOrigin: "0 0",
                     },
-                    '@keyframes shimmer': {
-                      '0%': { backgroundPosition: '0% 0%' },
-                      '100%': { backgroundPosition: '200% 200%' }
-                    }
+                    "@keyframes shimmer": {
+                      "0%": { backgroundPosition: "0% 0%" },
+                      "100%": { backgroundPosition: "200% 200%" },
+                    },
                   }}
                 >
                   Start Today
                 </Button>
-                
+
                 {/* Floating notification on button */}
                 <AnimatePresence>
                   {showHighlight && (
@@ -344,27 +372,27 @@ const Header = () => {
                       initial={{ opacity: 0, y: -20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      transition={{ 
+                      transition={{
                         delay: 0.5,
-                        type: "spring", 
-                        stiffness: 300, 
-                        damping: 15 
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 15,
                       }}
                     >
                       <Box
                         sx={{
-                          position: 'absolute',
+                          position: "absolute",
                           top: -15,
                           right: -10,
-                          backgroundColor: 'white',
+                          backgroundColor: "white",
                           color: theme.palette.text.primary,
-                          fontSize: '0.65rem',
-                          fontWeight: 'bold',
+                          fontSize: "0.65rem",
+                          fontWeight: "bold",
                           py: 0.3,
                           px: 1,
-                          borderRadius: '8px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                          border: '1px solid rgba(201, 99, 66, 0.3)',
+                          borderRadius: "8px",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                          border: "1px solid rgba(201, 99, 66, 0.3)",
                         }}
                       >
                         Limited Time Offer!
@@ -378,14 +406,17 @@ const Header = () => {
         </Toolbar>
       </Container>
       <Drawer
-        anchor="right"
+        anchor={isSmallMobile ? "bottom" : "right"}
         open={drawerOpen}
         onClose={handleDrawerToggle}
         PaperProps={{
           sx: {
-            width: 280,
+            width: isSmallMobile ? "100%" : 280,
+            maxHeight: isSmallMobile ? "80vh" : "100%",
+            borderTopLeftRadius: isSmallMobile ? "16px" : 0,
+            borderTopRightRadius: isSmallMobile ? "16px" : 0,
             backgroundColor: theme.palette.background.paper,
-          }
+          },
         }}
       >
         {drawer}
